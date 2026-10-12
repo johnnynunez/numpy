@@ -1,0 +1,70 @@
+{
+  "1.26.2": {
+    "comment_text": "",
+    "core-metadata": false,
+    "digests": {
+      "blake2b_256": "dd2b205ddff2314d4eea852e31d53b8e55eb3f32b292efc3dd86bd827ab9019d",
+      "md5": "8f6446a32e47953a03f8fe8533e21e98",
+      "sha256": "f65738447676ab5777f11e6bbbdb8ce11b785e105f690bc45966574816b6d3ea"
+    },
+    "downloads": -1,
+    "filename": "numpy-1.26.2.tar.gz",
+    "has_sig": false,
+    "md5_digest": "8f6446a32e47953a03f8fe8533e21e98",
+    "packagetype": "sdist",
+    "python_version": "source",
+    "requires_python": ">=3.9",
+    "size": 15664248,
+    "upload_time": "2023-11-12T23:17:31",
+    "upload_time_iso_8601": "2023-11-12T23:17:31.386552Z",
+    "url": "https://files.pythonhosted.org/packages/dd/2b/205ddff2314d4eea852e31d53b8e55eb3f32b292efc3dd86bd827ab9019d/numpy-1.26.2.tar.gz",
+    "yanked": false,
+    "yanked_reason": null
+  },
+  "1.26.4": {
+    "comment_text": "",
+    "core-metadata": false,
+    "digests": {
+      "blake2b_256": "656e09db70a523a96d25e115e71cc56a6f9031e7b8cd166c1ac8438307c14058",
+      "md5": "19550cbe7bedd96a928da9d4ad69509d",
+      "sha256": "2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4912010"
+    },
+    "downloads": -1,
+    "filename": "numpy-1.26.4.tar.gz",
+    "has_sig": false,
+    "md5_digest": "19550cbe7bedd96a928da9d4ad69509d",
+    "packagetype": "sdist",
+    "python_version": "source",
+    "requires_python": ">=3.9",
+    "size": 15786129,
+    "upload_time": "2024-02-06T00:26:44",
+    "upload_time_iso_8601": "2024-02-06T00:26:44.495150Z",
+    "url": "https://files.pythonhosted.org/packages/65/6e/09db70a523a96d25e115e71cc56a6f9031e7b8cd166c1ac8438307c14058/numpy-1.26.4.tar.gz",
+    "yanked": false,
+    "yanked_reason": null
+  },
+  "openblas": {
+    "comment_text": null,
+    "core-metadata": {
+      "sha256": "792f4d13e7d83dcc74b9a7cba8cc209535691fcb16963fdf4a19e665f3339654"
+    },
+    "digests": {
+      "blake2b_256": "17f94096debbb9ebecf98cc53011faf1424bd7c3d465b82653a3c8e579306f09",
+      "md5": "9bb4d5b66e61eaaf26eddd0e0bf67c6b",
+      "sha256": "804d78305a72a62e3ee99f6567c19f10ca519a698d949092f5f66663c78f4903"
+    },
+    "downloads": -1,
+    "filename": "scipy_openblas32-0.3.34.237.0-py3-none-win_arm64.whl",
+    "has_sig": false,
+    "md5_digest": "9bb4d5b66e61eaaf26eddd0e0bf67c6b",
+    "packagetype": "bdist_wheel",
+    "python_version": "py3",
+    "requires_python": ">=3.7",
+    "size": 5177110,
+    "upload_time": "2026-09-06T06:57:22",
+    "upload_time_iso_8601": "2026-09-06T06:57:22.287375Z",
+    "url": "https://files.pythonhosted.org/packages/17/f9/4096debbb9ebecf98cc53011faf1424bd7c3d465b82653a3c8e579306f09/scipy_openblas32-0.3.34.237.0-py3-none-win_arm64.whl",
+    "yanked": false,
+    "yanked_reason": null
+  }
+}

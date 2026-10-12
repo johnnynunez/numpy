@@ -1,0 +1,77 @@
+name: NumPy 1.26 native dependency preflight
+on:
+  push:
+    branches: [ci/numpy126-native-preflight-20261012]
+permissions:
+  contents: read
+jobs:
+  numpy:
+    runs-on: windows-11-arm
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['1.26.2', '1.26.4']
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      CC: clang-cl
+      CXX: clang-cl
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+          architecture: arm64
+      - name: Isolated tools and exact MSVC 14.44 environment
+        shell: pwsh
+        run: |
+          $work = "$env:RUNNER_TEMP/numpy126"
+          New-Item -ItemType Directory -Force "$work/evidence", "$work/work" | Out-Null
+          "WORK=$work/work" >> $env:GITHUB_ENV
+          "EVIDENCE=$work/evidence" >> $env:GITHUB_ENV
+          "PIP_CACHE_DIR=$work/pip-cache" >> $env:GITHUB_ENV
+          python -m venv "$work/venv"
+          "$work/venv/Scripts" >> $env:GITHUB_PATH
+          $vswhere = "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe"
+          $vs = & $vswhere -latest -products '*' -property installationPath
+          Get-ChildItem "$vs/VC/Tools/MSVC" | Out-File "$work/evidence/msvc-installed.txt"
+          if (-not (Get-ChildItem "$vs/VC/Tools/MSVC/14.44*")) { throw 'Exact MSVC14.44 not installed; no build attempted' }
+          $vc = "$vs/VC/Auxiliary/Build/vcvarsall.bat"
+          $lines = & cmd /c "`"$vc`" arm64 -vcvars_ver=14.44 >nul && set"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          foreach ($line in $lines) {
+            if ($line -match '^(PATH|INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCToolsVersion|WindowsSdkDir|WindowsSDKVersion|VSCMD_ARG_TGT_ARCH|VSCMD_ARG_HOST_ARCH)=(.*)$') { "$($matches[1])=$($matches[2])" >> $env:GITHUB_ENV }
+          }
+          'C:/Program Files/LLVM/bin' >> $env:GITHUB_PATH
+      - name: Pin build requirements without widening source caps
+        shell: pwsh
+        run: |
+          python -m pip install Cython==0.29.37 meson-python==0.15.0 build==1.2.2.post1 pyproject-metadata==0.7.1 setuptools==69.5.1 colorama==0.4.6 packaging==24.2 ninja==1.13.2 pkgconf==3.0.7.post0 delvewheel==1.13.0 pefile==2024.8.26
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pip freeze --all | Out-File "$env:EVIDENCE/build-tools.txt"
+          python -m unittest -v test_integrity
+      - name: BLAS and Fortran preflight then exact release build
+        shell: pwsh
+        run: |
+          python build_numpy.py --version '${{ matrix.version }}' --out "$env:WORK"
+          exit $LASTEXITCODE
+      - name: Stage bounded public evidence
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path $env:WORK) {
+            Get-ChildItem $env:WORK -File | Where-Object { $_.Extension -in '.json', '.log', '.xml', '.txt', '.f90', '.exe' } | Copy-Item -Destination $env:EVIDENCE
+            foreach ($sub in 'wheels','raw-wheel') {
+              if (Test-Path "$env:WORK/$sub") { Copy-Item -Recurse "$env:WORK/$sub" "$env:EVIDENCE/$sub" }
+            }
+          }
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: numpy-${{ matrix.version }}-cp312-arm64
+          path: ${{ env.EVIDENCE }}
+          if-no-files-found: error
+          retention-days: 14
