@@ -63,10 +63,8 @@ jobs:
         shell: pwsh
         run: |
           if (Test-Path $env:WORK) {
-            Get-ChildItem $env:WORK -File | Where-Object { $_.Extension -in '.json', '.log', '.xml', '.txt', '.f90', '.exe' } | Copy-Item -Destination $env:EVIDENCE
-            foreach ($sub in 'wheels','raw-wheel') {
-              if (Test-Path "$env:WORK/$sub") { Copy-Item -Recurse "$env:WORK/$sub" "$env:EVIDENCE/$sub" }
-            }
+            # Publication gate: reports only while CRT provenance is reviewed.
+            Get-ChildItem $env:WORK -File | Where-Object { $_.Extension -in '.json', '.log', '.xml', '.txt', '.f90' } | Copy-Item -Destination $env:EVIDENCE
           }
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
